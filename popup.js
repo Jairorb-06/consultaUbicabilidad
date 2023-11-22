@@ -121,26 +121,25 @@ window.addEventListener("message", function (event) {
         );
       });
 
+      let pressBotonUbicabilidad = false;
       chrome.tabs.onUpdated.addListener(function (tabId, changeInfo, tab) {
-        console.log("weeee")
         if (changeInfo.status === "complete") {
-          // Espera un tiempo después de que la página se ha cargado completamente
-          setTimeout(function () {
-            chrome.scripting.executeScript({
-              target: { tabId: tab.id },
-              function: () => {
-                console.log("scriptong");
-                // Espera otro tiempo después de hacer clic en el botón "Salir"
-                setTimeout(() => {
-                  const botonConsultaUbicabilidad  = document.querySelector('table[id="apy_t0tbl"]');
-                  console.log(botonConsultaUbicabilidad)
-                  if (botonConsultaUbicabilidad) {
-                    botonConsultaUbicabilidad.click();
+          if (!pressBotonUbicabilidad) {
+            setTimeout(function () {
+              chrome.scripting.executeScript({
+                target: { tabId: tab.id },
+                function: () => {
+                  console.log("scriptong");
+                    const botonUbicabilidad = document.getElementById('apy_t0i185btn');
+                    console.log("buton", botonUbicabilidad)
+                    if (botonUbicabilidad) {
+                      botonUbicabilidad.click();
+                    }
                   }
-                }, 3000);
-              },
-            });
-          }, 4000); // Ajusta el tiempo según sea necesario
+              });
+              pressBotonUbicabilidad = true;
+            }, 1000); 
+          }
         }
       });
       
