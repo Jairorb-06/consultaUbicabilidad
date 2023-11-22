@@ -34,25 +34,39 @@ window.addEventListener("message", function (event) {
                   // Seleccionar la opción correspondiente en el select
                   //tipoDocumentoSelect.value = obtenerValorSelect(tipoDocumentoSelect, tipoDocumento);
                   seleccionarOpcionSelect(tipoDocumentoSelect, tipoDocumento);
-                  
-                  
                   // Ingresar el número de documento en el input
                  // numeroDocumentoInput.value = numeroDocumento;
+                 simularEvento(tipoDocumentoSelect, 'change');
+
                  numeroDocumentoInput.value = numeroDocumento.replace(/\./g, '');
-                  // Incrementar el índice para el próximo propietario
+
+                simularEvento(numeroDocumentoInput, 'input');
                   currentIndex++;
 
-                  /*const botonBuscar = document.querySelector('.btn.btn-primary.btn-sm.small');
+                  const botonBuscar = document.querySelector('.btn.btn-primary.btn-sm.small');
                   if (botonBuscar) {
                     botonBuscar.click();
-                  }*/
-                  setTimeout(() => {
+                    setTimeout(() => {
+                      const botonSalir = document.querySelector('.btn.btn-default');
+                      if (botonSalir) {
+                        botonSalir.click();
+                        setTimeout(() => {
+                          // Buscar y hacer clic en el botón "Consulta Ubicabilidad"
+                          const botonConsultaUbicabilidad = document.querySelector('.div_interno');
+                          if (botonConsultaUbicabilidad) {
+                            botonConsultaUbicabilidad.click();
+                          }
+                        }, 3000); 
+                      }
+                    }, 3000);
+                  }; 
+                 /* setTimeout(() => {
                     const botonBuscar = document.querySelector('.btn.btn-primary.btn-sm.small');
                     if (botonBuscar) {
                       botonBuscar.click();
                       chrome.runtime.sendMessage({ currentIndex: currentIndex });
                     }
-                  }, 3000);
+                  }, 3000);*/
                   
                 }
 
@@ -74,11 +88,20 @@ window.addEventListener("message", function (event) {
                   }
                   return '';
                 }
+
+                function simularEvento(elemento, tipoEvento) {
+                  const evento = new Event(tipoEvento, {
+                    bubbles: true,
+                    cancelable: true,
+                  });
+                  elemento.dispatchEvent(evento);
+                }
+                
               },
               args: [datosPropietario, currentIndex], 
             });
 
-           /*  chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
+            /*chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
 
               if (message.currentIndex !== undefined) {
                 currentIndex = message.currentIndex;
@@ -93,14 +116,38 @@ window.addEventListener("message", function (event) {
                 }
 
               }
-            }); */
-
+            });*/
             
           }
         );
-
-
       });
+
+      let pressBotonUbicabilidad = false;
+      chrome.tabs.onUpdated.addListener(function (tabId, changeInfo, tab) {
+        if (changeInfo.status === "complete") {
+          if (!pressBotonUbicabilidad) {
+            setTimeout(function () {
+              chrome.scripting.executeScript({
+                target: { tabId: tab.id },
+                function: () => {
+                  console.log("scriptong");
+                    const botonUbicabilidad = document.getElementById('apy_t0i185btn');
+                    console.log("buton", botonUbicabilidad)
+                    if (botonUbicabilidad) {
+                      botonUbicabilidad.click();
+                    }
+                  }
+              });
+              pressBotonUbicabilidad = true;
+            }, 1000); 
+          }
+        }
+      });
+      
+      
+      
+      
+
       
    /*  chrome.tabs.onUpdated.addListener(function (tabId, changeInfo, tab) {
       if (changeInfo.status === "complete") {
