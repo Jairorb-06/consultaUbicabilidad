@@ -50,6 +50,7 @@ window.addEventListener("message", function (event) {
                     const botonBuscar = document.querySelector('.btn.btn-primary.btn-sm.small');
                     if (botonBuscar) {
                       botonBuscar.click();
+                      chrome.runtime.sendMessage({ currentIndex: currentIndex });
                     }
                   }, 3000);
                   
@@ -77,7 +78,7 @@ window.addEventListener("message", function (event) {
               args: [datosPropietario, currentIndex], 
             });
 
-            chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
+           /*  chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
 
               if (message.currentIndex !== undefined) {
                 currentIndex = message.currentIndex;
@@ -92,7 +93,7 @@ window.addEventListener("message", function (event) {
                 }
 
               }
-            });
+            }); */
 
             
           }
