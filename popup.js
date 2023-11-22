@@ -34,24 +34,25 @@ window.addEventListener("message", function (event) {
                   // Seleccionar la opción correspondiente en el select
                   //tipoDocumentoSelect.value = obtenerValorSelect(tipoDocumentoSelect, tipoDocumento);
                   seleccionarOpcionSelect(tipoDocumentoSelect, tipoDocumento);
-                  
-                  
                   // Ingresar el número de documento en el input
                  // numeroDocumentoInput.value = numeroDocumento;
+                 simularEvento(tipoDocumentoSelect, 'change');
+
                  numeroDocumentoInput.value = numeroDocumento.replace(/\./g, '');
-                  // Incrementar el índice para el próximo propietario
+
+                simularEvento(numeroDocumentoInput, 'input');
                   currentIndex++;
 
-                  /*const botonBuscar = document.querySelector('.btn.btn-primary.btn-sm.small');
+                  const botonBuscar = document.querySelector('.btn.btn-primary.btn-sm.small');
                   if (botonBuscar) {
                     botonBuscar.click();
-                  }*/
-                  setTimeout(() => {
+                  }
+                 /* setTimeout(() => {
                     const botonBuscar = document.querySelector('.btn.btn-primary.btn-sm.small');
                     if (botonBuscar) {
                       botonBuscar.click();
                     }
-                  }, 3000);
+                  }, 3000);*/
                   
                 }
 
@@ -73,11 +74,19 @@ window.addEventListener("message", function (event) {
                   }
                   return '';
                 }
+
+                function simularEvento(elemento, tipoEvento) {
+                  const evento = new Event(tipoEvento, {
+                    bubbles: true,
+                    cancelable: true,
+                  });
+                  elemento.dispatchEvent(evento);
+                }
               },
               args: [datosPropietario, currentIndex], 
             });
 
-            chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
+            /*chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
 
               if (message.currentIndex !== undefined) {
                 currentIndex = message.currentIndex;
@@ -92,8 +101,7 @@ window.addEventListener("message", function (event) {
                 }
 
               }
-            });
-
+            });*/
             
           }
         );
