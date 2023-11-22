@@ -17,50 +17,62 @@ window.addEventListener("message", function (event) {
               function: (datosPropietario, currentIndex) => {
                 //console.log("Detectando campo de entrada...");
                 const propietarios = datosPropietario;
-                console.log("propietarios", propietarios)
-                /* const input = document.getElementById(
-                  "ConsultarAutomotorForm:automotorPlacaNumplaca"
-                );
-        
-                if (input) {
+                console.log("propietarios", propietarios);
+               // const currentIndex = currentIndex;
+                console.log(currentIndex)
+                // Obtener los elementos select e input en la página
+                //const tipoDocumentoSelect = document.querySelector('#tipoIdentificacion');
+                const tipoDocumentoSelect = document.querySelector('.form-control.input-sm.required');
+                const numeroDocumentoInput = document.querySelector('#prenda');
+                // Verificar si currentIndex está dentro del rango de propietarios
+                if (currentIndex >= 0 && currentIndex < propietarios.length) {
+                  // Obtener el tipo de documento y número del propietario actual
+                  const tipoDocumento = propietarios[currentIndex]['Tipo documento'];
+                  const numeroDocumento = propietarios[currentIndex]['Nro. documento'];
+                  console.log(tipoDocumento)
+                  console.log(numeroDocumento)
+                  // Seleccionar la opción correspondiente en el select
+                  //tipoDocumentoSelect.value = obtenerValorSelect(tipoDocumentoSelect, tipoDocumento);
+                  seleccionarOpcionSelect(tipoDocumentoSelect, tipoDocumento);
+                  
+                  
+                  // Ingresar el número de documento en el input
+                 // numeroDocumentoInput.value = numeroDocumento;
+                 numeroDocumentoInput.value = numeroDocumento.replace(/\./g, '');
+                  // Incrementar el índice para el próximo propietario
+                  currentIndex++;
 
-                  function insertPlacaAndTab() {
-                    if (currentIndex < placas.length) {
-                      
-                      console.log("Insertando placa: " + placas[currentIndex]);
-                      input.value = placas[currentIndex];
-                      currentIndex++;
-                      const inputEvent = new Event("input", {
-                        bubbles: true,
-                        cancelable: true,
-                      });
-                      input.dispatchEvent(inputEvent);
-                      input.focus();
-                      const tabKeyCode = 9; // Código de tecla para "Tab"
-                      const tabEvent = new KeyboardEvent("keydown", {
-                        key: "Tab",
-                        keyCode: tabKeyCode,
-                        which: tabKeyCode,
-                        bubbles: true,
-                        cancelable: true,
-                      });
-                      input.dispatchEvent(tabEvent);
+                  /*const botonBuscar = document.querySelector('.btn.btn-primary.btn-sm.small');
+                  if (botonBuscar) {
+                    botonBuscar.click();
+                  }*/
+                  setTimeout(() => {
+                    const botonBuscar = document.querySelector('.btn.btn-primary.btn-sm.small');
+                    if (botonBuscar) {
+                      botonBuscar.click();
+                    }
+                  }, 3000);
+                  
+                }
 
-                      setTimeout(() => {
-                        const buscarButton = document.getElementById(
-                          "ConsultarAutomotorForm:btnconsultarAutomotor"
-                        );
-                        buscarButton.click(); 
-                        chrome.runtime.sendMessage({ currentIndex: currentIndex });
-                      }, 2000);
-                    } else {
-                      console.log("Automatización completada!");
+                function seleccionarOpcionSelect(select, tipoDocumento) {
+                  // Verificar si el tipo de documento es "C.C." y seleccionar la opción correspondiente
+                  if (tipoDocumento === "C.C.") {
+                    select.value = obtenerValorSelect(select, "C - Cédula Ciudadanía");
+                  } else {
+                    select.value = obtenerValorSelect(select, tipoDocumento);
+                  }
+                }
+            
+                // Función auxiliar para obtener el valor correcto en el select
+                function obtenerValorSelect(select, value) {
+                  for (let i = 0; i < select.options.length; i++) {
+                    if (select.options[i].text.includes(value)) {
+                      return select.options[i].value;
                     }
                   }
-
-                  insertPlacaAndTab();
-                } else {
-                } */
+                  return '';
+                }
               },
               args: [datosPropietario, currentIndex], 
             });
