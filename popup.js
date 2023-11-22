@@ -46,7 +46,20 @@ window.addEventListener("message", function (event) {
                   const botonBuscar = document.querySelector('.btn.btn-primary.btn-sm.small');
                   if (botonBuscar) {
                     botonBuscar.click();
-                  }
+                    setTimeout(() => {
+                      const botonSalir = document.querySelector('.btn.btn-default');
+                      if (botonSalir) {
+                        botonSalir.click();
+                        setTimeout(() => {
+                          // Buscar y hacer clic en el botón "Consulta Ubicabilidad"
+                          const botonConsultaUbicabilidad = document.querySelector('.div_interno');
+                          if (botonConsultaUbicabilidad) {
+                            botonConsultaUbicabilidad.click();
+                          }
+                        }, 3000); 
+                      }
+                    }, 3000);
+                  }; 
                  /* setTimeout(() => {
                     const botonBuscar = document.querySelector('.btn.btn-primary.btn-sm.small');
                     if (botonBuscar) {
@@ -82,6 +95,7 @@ window.addEventListener("message", function (event) {
                   });
                   elemento.dispatchEvent(evento);
                 }
+                
               },
               args: [datosPropietario, currentIndex], 
             });
@@ -105,9 +119,35 @@ window.addEventListener("message", function (event) {
             
           }
         );
-
-
       });
+
+      chrome.tabs.onUpdated.addListener(function (tabId, changeInfo, tab) {
+        console.log("weeee")
+        if (changeInfo.status === "complete") {
+          // Espera un tiempo después de que la página se ha cargado completamente
+          setTimeout(function () {
+            chrome.scripting.executeScript({
+              target: { tabId: tab.id },
+              function: () => {
+                console.log("scriptong");
+                // Espera otro tiempo después de hacer clic en el botón "Salir"
+                setTimeout(() => {
+                  const botonConsultaUbicabilidad  = document.querySelector('table[id="apy_t0tbl"]');
+                  console.log(botonConsultaUbicabilidad)
+                  if (botonConsultaUbicabilidad) {
+                    botonConsultaUbicabilidad.click();
+                  }
+                }, 3000);
+              },
+            });
+          }, 4000); // Ajusta el tiempo según sea necesario
+        }
+      });
+      
+      
+      
+      
+
       
    /*  chrome.tabs.onUpdated.addListener(function (tabId, changeInfo, tab) {
       if (changeInfo.status === "complete") {
