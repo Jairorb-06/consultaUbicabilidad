@@ -50,15 +50,10 @@ window.addEventListener("message", function (event) {
                       const botonSalir = document.querySelector('.btn.btn-default');
                       if (botonSalir) {
                         botonSalir.click();
-                        setTimeout(() => {
-                          // Buscar y hacer clic en el botón "Consulta Ubicabilidad"
-                          const botonConsultaUbicabilidad = document.querySelector('.div_interno');
-                          if (botonConsultaUbicabilidad) {
-                            botonConsultaUbicabilidad.click();
-                          }
-                        }, 3000); 
+                        chrome.runtime.sendMessage({ currentIndex: currentIndex });
+                       // pressBotonUbicabilidad = false;
                       }
-                    }, 3000);
+                    }, 5000);
                   }; 
                  /* setTimeout(() => {
                     const botonBuscar = document.querySelector('.btn.btn-primary.btn-sm.small');
@@ -72,7 +67,7 @@ window.addEventListener("message", function (event) {
 
                 function seleccionarOpcionSelect(select, tipoDocumento) {
                   // Verificar si el tipo de documento es "C.C." y seleccionar la opción correspondiente
-                  if (tipoDocumento === "C.C.") {
+                  if (tipoDocumento === "C.C." || "NIT") {
                     select.value = obtenerValorSelect(select, "C - Cédula Ciudadanía");
                   } else {
                     select.value = obtenerValorSelect(select, tipoDocumento);
@@ -101,8 +96,8 @@ window.addEventListener("message", function (event) {
               args: [datosPropietario, currentIndex], 
             });
 
-            /*chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
-
+            chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
+              
               if (message.currentIndex !== undefined) {
                 currentIndex = message.currentIndex;
                 console.log("currentIndex inc", currentIndex)
@@ -112,11 +107,11 @@ window.addEventListener("message", function (event) {
                   setTimeout(() => {
                     consultarAutomotorButtonClicked = false;
                     startAutomationButton.click();
-                  }, 5000);
+                  }, 6000);
                 }
 
               }
-            });*/
+            });
             
           }
         );
@@ -125,8 +120,8 @@ window.addEventListener("message", function (event) {
       let pressBotonUbicabilidad = false;
       chrome.tabs.onUpdated.addListener(function (tabId, changeInfo, tab) {
         if (changeInfo.status === "complete") {
-          if (!pressBotonUbicabilidad) {
-            setTimeout(function () {
+         // if (!pressBotonUbicabilidad) {
+            //setTimeout(function () {
               chrome.scripting.executeScript({
                 target: { tabId: tab.id },
                 function: () => {
@@ -139,8 +134,8 @@ window.addEventListener("message", function (event) {
                   }
               });
               pressBotonUbicabilidad = true;
-            }, 1000); 
-          }
+           // }, 1000); 
+          //}
         }
       });
       
