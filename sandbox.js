@@ -21,7 +21,8 @@ window.addEventListener("message", async function(event) {
     const informacionPersona = datos.informacionPersona || {};
     const datosUbicacion = datos.datosDirecciones || {};
     
-    /* const placa = datos.placa 
+    const placa = datos.placa 
+    /* 
     if (placa !== undefined) {
       placaActual = placa;
       //console.log("Nuevo valor de placa:", placaActual);
@@ -33,26 +34,25 @@ window.addEventListener("message", async function(event) {
     // console.log("length history",  historialTramites.length > 0)
     const firestore = firebase.firestore();
 
-   
-
-  /* const informacionCollection = await firestore.collection("ubicabilidad").get();
-  // let placaEncontradaInformacion = false;
+   const informacionCollection = await firestore.collection("ubicabilidad").get();
+   let placaEncontradaInformacion = false;
   informacionCollection.forEach((doc) => {
     const datos = doc.data();
-    if (datos.placa === placaActual) {
+    if (datos.placa === placa) {
       placaEncontradaInformacion = true;
     }
   });
-  console.log("placaEncontradaInformacion", placaEncontradaInformacion) */
+  console.log("placaEncontradaInformacion", placaEncontradaInformacion) 
    
-    // if (!placaEncontradaInformacion){
+     if (!placaEncontradaInformacion){
       // Enviar a Firestore   
-      if (Object.keys(informacionPersona).length > 0 ) {
+      console.log("placa", placa)
+      if (Object.keys(informacionPersona).length > 0 && placa !== undefined ) {
           const respuestasCollection = firestore.collection("ubicabilidad");
           respuestasCollection.add({
             informacionPersona: informacionPersona,
             datosUbicacion: datosUbicacion,
-            // placa: placaActual,
+            placa: placa,
           })
           .then((docRef) => {
             console.log("Respuesta guardada en Firestore con ID:", docRef.id);
@@ -61,9 +61,9 @@ window.addEventListener("message", async function(event) {
             console.error("Error al guardar la respuesta en Firestore:", error);
           });
       }
-   /*  }else{
+     }else{
       console.log("placa ya consultada!")
-    } */
+    } 
 
     
   } catch (error) {
