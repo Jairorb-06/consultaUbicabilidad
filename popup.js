@@ -48,6 +48,7 @@ window.addEventListener("message", function (event) {
                     botonBuscar.click();
 
                     setTimeout(()=>{
+<<<<<<< HEAD
                       // Obtener el elemento que contiene la información
 var panelBody = document.querySelector('.panel-body.panel-collapse');
 
@@ -77,6 +78,17 @@ console.log(informacionPersona);
                     }, 4000)
 
                     
+=======
+                      if (Object.keys(informacionPersona).length > 0 && Object.keys(infoVehiculo).length > 0 ) {
+                        // Enviar los datos de vuelta al contexto del evento
+                        chrome.runtime.sendMessage({
+                          informacionPersona: informacionPersona,
+                          infoVehiculo: infoVehiculo,
+                          // placa : placa
+                        });
+                      }
+                    }, 2000)
+>>>>>>> dddd7b4a67862860cface927b11cbc50bedaf9b8
                     setTimeout(() => {
                       const botonSalir = document.querySelector('.btn.btn-default');
                       if (botonSalir) {
@@ -90,6 +102,7 @@ console.log(informacionPersona);
                     const botonBuscar = document.querySelector('.btn.btn-primary.btn-sm.small');
                     if (botonBuscar) {
                       botonBuscar.click();
+                      chrome.runtime.sendMessage({ currentIndex: currentIndex });
                     }
                   }, 3000);*/
                   
@@ -124,6 +137,19 @@ console.log(informacionPersona);
                 
               },
               args: [datosPropietario, currentIndex], 
+            });
+
+            chrome.runtime.onMessage.addListener(function (message) {             
+              const datosUbicabilidad = {
+                informacionPersona: message.informacionPersona,
+                infoVehiculo: message.infoVehiculo,
+                // placa: message.placa
+              };
+              // if (!historialTramitesEnviado) {
+                window.frames[0].postMessage(JSON.stringify(datosUbicabilidad), "*");
+                // historialTramitesEnviado = true;
+              // }
+              //window.frames[0].postMessage(JSON.stringify(platesData), "*");
             });
 
             chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
