@@ -79,14 +79,13 @@ async function fetchData() {
   try {
     const platesCollection = firestore.collection("Placas");
     const querySnapshot = await platesCollection.get();
-    
+
     const allDatosPropietario = [];
     querySnapshot.forEach(async (doc) => {
       const columnData = doc.data().placasUbicabilidad;
-      console.log(columnData)      
+      console.log(columnData);
       if (Array.isArray(columnData)) {
         for (const plate of columnData) {
-          
           const informacionCollection = firestore.collection("informacion");
           const informacionQuery = await informacionCollection
             .where("datosBasicos.Placa", "==", plate)
@@ -96,20 +95,25 @@ async function fetchData() {
             // Obtener y manejar los datosPropietario si se encuentra la placa
             const datosPropietario = informacionDoc.data().datosPropietario;
             console.log(`Datos Propietario para la placa ${plate}:`, datosPropietario);
-            allDatosPropietario.push(...datosPropietario);
+
+            // Agregar la placa al objeto de datosPropietario
+            datosPropietario.forEach((datos) => {
+              datos.placa = plate;
+              allDatosPropietario.push(datos);
+            });
           });
         }
+
+        // Enviar el array completo como mensaje
         window.parent.postMessage({ allDatosPropietario }, "*");
-        // console.log('olll',allDatosPropietario)
       } else {
         console.log("No se encontraron datos de placas.");
       }
     });
-   
-    // window.parent.postMessage({ platesData }, "*");
   } catch (error) {
     console.error("Error al consultar la colección 'plates':", error);
   }
 }
+
 
 fetchData();
