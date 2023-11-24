@@ -19,7 +19,7 @@ window.addEventListener("message", function (event) {
                 const propietarios = datosPropietario;
                 console.log("propietarios", propietarios);
                // const currentIndex = currentIndex;
-                console.log(currentIndex)
+                //console.log(currentIndex)
                 // Obtener los elementos select e input en la página
                 //const tipoDocumentoSelect = document.querySelector('#tipoIdentificacion');
                 const tipoDocumentoSelect = document.querySelector('.form-control.input-sm.required');
@@ -29,8 +29,8 @@ window.addEventListener("message", function (event) {
                   // Obtener el tipo de documento y número del propietario actual
                   const tipoDocumento = propietarios[currentIndex]['Tipo documento'];
                   const numeroDocumento = propietarios[currentIndex]['Nro. documento'];
-                  console.log(tipoDocumento)
-                  console.log(numeroDocumento)
+                  //console.log(tipoDocumento)
+                  //console.log(numeroDocumento)
                   // Seleccionar la opción correspondiente en el select
                   //tipoDocumentoSelect.value = obtenerValorSelect(tipoDocumentoSelect, tipoDocumento);
                   seleccionarOpcionSelect(tipoDocumentoSelect, tipoDocumento);
@@ -46,10 +46,41 @@ window.addEventListener("message", function (event) {
                   const botonBuscar = document.querySelector('.btn.btn-primary.btn-sm.small');
                   if (botonBuscar) {
                     botonBuscar.click();
+
+                    setTimeout(()=>{
+                      // Obtener el elemento que contiene la información
+var panelBody = document.querySelector('.panel-body.panel-collapse');
+
+// Crear un objeto para almacenar la información
+var informacionPersona = {};
+
+// Obtener todas las filas dentro del panel
+var filas = panelBody.querySelectorAll('.row');
+
+// Iterar sobre cada fila y extraer la información
+filas.forEach(function (fila) {
+    // Obtener las columnas de la fila
+    var columnas = fila.querySelectorAll('.col-xs-3, .ng-binding');
+
+    // Obtener la etiqueta y el valor
+    var etiqueta = columnas[0].textContent.trim().replace(':', ''); // Eliminar los dos puntos
+    var valor = columnas[1].textContent.trim();
+
+    // Almacenar en el objeto de información
+    informacionPersona[etiqueta] = valor;
+});
+
+// Mostrar la información en la consola
+console.log(informacionPersona);
+
+
+                    }, 4000)
+
+                    
                     setTimeout(() => {
                       const botonSalir = document.querySelector('.btn.btn-default');
                       if (botonSalir) {
-                        botonSalir.click();
+                        //botonSalir.click();
                         chrome.runtime.sendMessage({ currentIndex: currentIndex });
                        // pressBotonUbicabilidad = false;
                       }
@@ -99,7 +130,7 @@ window.addEventListener("message", function (event) {
               
               if (message.currentIndex !== undefined) {
                 currentIndex = message.currentIndex;
-                console.log("currentIndex inc", currentIndex)
+               // console.log("currentIndex inc", currentIndex)
                 const startAutomationButton = document.getElementById("startAutomation");
                 
                 if (startAutomationButton) {
@@ -124,9 +155,9 @@ window.addEventListener("message", function (event) {
               chrome.scripting.executeScript({
                 target: { tabId: tab.id },
                 function: () => {
-                  console.log("scriptong");
+                  //console.log("scriptong");
                     const botonUbicabilidad = document.getElementById('apy_t0i185btn');
-                    console.log("buton", botonUbicabilidad)
+                    //console.log("buton", botonUbicabilidad)
                     if (botonUbicabilidad) {
                       botonUbicabilidad.click();
                     }
