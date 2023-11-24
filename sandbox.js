@@ -113,11 +113,3 @@ async function fetchData() {
 }
 
 fetchData();
-
- 
-  /*
-          //iterar placa por placa
-          const filteredPlates = columnData.filter(plate => !plate.estado);
-          for (const plate of filteredPlates) {
-            platesData.push(plate);
-          } */ 
