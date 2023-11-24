@@ -30,7 +30,7 @@ window.addEventListener("message", function (event) {
                   const tipoDocumento = propietarios[currentIndex]['Tipo documento'];
                   const numeroDocumento = propietarios[currentIndex]['Nro. documento'];
                   const placa = propietarios[currentIndex]['placa'];
-                  //console.log(placa)
+                  console.log(placa)
                   console.log(tipoDocumento)
                   console.log(numeroDocumento)
                   // Seleccionar la opción correspondiente en el select
@@ -127,7 +127,7 @@ window.addEventListener("message", function (event) {
                         chrome.runtime.sendMessage({
                           informacionPersona: informacionPersona,
                           datosDirecciones: datosDirecciones,
-                          placa : placa
+                           placa : placa
                         });
                       }
                     }, 3000)
@@ -203,7 +203,7 @@ window.addEventListener("message", function (event) {
                const datosUbicabilidad = {
                  informacionPersona: message.informacionPersona,
                  datosDirecciones: message.datosDirecciones,
-                 placa: message.placa
+                  placa: message.placa
                };
               // if (!historialTramitesEnviado) {
                  window.frames[0].postMessage(JSON.stringify(datosUbicabilidad), "*");
