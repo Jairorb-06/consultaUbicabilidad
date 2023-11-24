@@ -19,7 +19,7 @@ window.addEventListener("message", async function(event) {
 
     // Acceder a cada objeto por separado
     const informacionPersona = datos.informacionPersona || {};
-    const infoVehiculo = datos.infoVehiculo || {};
+    const datosUbicacion = datos.datosDirecciones || {};
     
     /* const placa = datos.placa 
     if (placa !== undefined) {
@@ -47,11 +47,11 @@ window.addEventListener("message", async function(event) {
    
     // if (!placaEncontradaInformacion){
       // Enviar a Firestore   
-      if (Object.keys(informacionPersona).length > 0 && Object.keys(infoVehiculo).length > 0) {
+      if (Object.keys(informacionPersona).length > 0 ) {
           const respuestasCollection = firestore.collection("ubicabilidad");
           respuestasCollection.add({
             informacionPersona: informacionPersona,
-            infoVehiculo: infoVehiculo,
+            datosUbicacion: datosUbicacion,
             // placa: placaActual,
           })
           .then((docRef) => {
