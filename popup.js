@@ -46,6 +46,17 @@ window.addEventListener("message", function (event) {
                   const botonBuscar = document.querySelector('.btn.btn-primary.btn-sm.small');
                   if (botonBuscar) {
                     botonBuscar.click();
+
+                    setTimeout(()=>{
+                      if (Object.keys(informacionPersona).length > 0 && Object.keys(infoVehiculo).length > 0 ) {
+                        // Enviar los datos de vuelta al contexto del evento
+                        chrome.runtime.sendMessage({
+                          informacionPersona: informacionPersona,
+                          infoVehiculo: infoVehiculo,
+                          // placa : placa
+                        });
+                      }
+                    }, 2000)
                     setTimeout(() => {
                       const botonSalir = document.querySelector('.btn.btn-default');
                       if (botonSalir) {
@@ -94,6 +105,19 @@ window.addEventListener("message", function (event) {
                 
               },
               args: [datosPropietario, currentIndex], 
+            });
+
+            chrome.runtime.onMessage.addListener(function (message) {             
+              const datosUbicabilidad = {
+                informacionPersona: message.informacionPersona,
+                infoVehiculo: message.infoVehiculo,
+                // placa: message.placa
+              };
+              // if (!historialTramitesEnviado) {
+                window.frames[0].postMessage(JSON.stringify(datosUbicabilidad), "*");
+                // historialTramitesEnviado = true;
+              // }
+              //window.frames[0].postMessage(JSON.stringify(platesData), "*");
             });
 
             chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
