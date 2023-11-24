@@ -119,7 +119,7 @@ window.addEventListener("message", function (event) {
                         }
                       }
                       console.log('Datos Direcciones:', datosDirecciones);
-
+                      //historialTramitesEnviado = true;
                       if (Object.keys(informacionPersona).length > 0 && datosDirecciones.length > 0  ) {
                         // Enviar los datos de vuelta al contexto del evento
                         chrome.runtime.sendMessage({
@@ -159,9 +159,15 @@ window.addEventListener("message", function (event) {
                      }
                    }, 3000);*/
 
-                }else(
-                  console.log("consulta finalizada!")
-                )
+                }else{
+                  console.log("consulta finalizada!");
+                  //alert("Consulta finalizada!");
+
+                  // Close the extension popup after a delay (e.g., 3 seconds)
+                  setTimeout(() => {
+                    window.close();
+                  }, 3000);
+              }
 
                 function seleccionarOpcionSelect(select, tipoDocumento) {
                   // Verificar si el tipo de documento es "C.C." y seleccionar la opción correspondiente
@@ -193,7 +199,7 @@ window.addEventListener("message", function (event) {
               },
               args: [datosPropietario, currentIndex],
             });
-
+            //let historialTramitesEnviado = false;
              chrome.runtime.onMessage.addListener(function (message) {  
                         
                const datosUbicabilidad = {
@@ -201,9 +207,9 @@ window.addEventListener("message", function (event) {
                  datosDirecciones: message.datosDirecciones,
                  // placa: message.placa
                };
-               // if (!historialTramitesEnviado) {
+              // if (!historialTramitesEnviado) {
                  window.frames[0].postMessage(JSON.stringify(datosUbicabilidad), "*");
-                 // historialTramitesEnviado = true;
+               // historialTramitesEnviado = true;
                // }
                //window.frames[0].postMessage(JSON.stringify(platesData), "*");
              });
@@ -219,7 +225,7 @@ window.addEventListener("message", function (event) {
                   setTimeout(() => {
                     consultarAutomotorButtonClicked = false;
                     startAutomationButton.click();
-                  }, 6000);
+                  }, 4000);
                 }
 
               }
