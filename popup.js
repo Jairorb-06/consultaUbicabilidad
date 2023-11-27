@@ -82,7 +82,7 @@ window.addEventListener("message", function (event) {
                            placa : placa
                         });
                       }
-                    }, 3000)
+                    }, 5000)
 
                     chrome.runtime.sendMessage({ currentIndex: currentIndex });
                   };
@@ -147,7 +147,7 @@ window.addEventListener("message", function (event) {
                   setTimeout(() => {
                     // consultarAutomotorButtonClicked = false;
                     startAutomationButton.click();
-                  }, 1000);
+                  }, 700);
                 }
 
               }
