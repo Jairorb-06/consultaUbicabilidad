@@ -82,13 +82,14 @@ window.addEventListener("message", function (event) {
                            placa : placa
                         });
                       }
-                    }, 3000)
+                    }, 5000)
 
                     chrome.runtime.sendMessage({ currentIndex: currentIndex });
                   };
 
                 }else{
                   console.log("consulta finalizada!");
+                  //chrome.runtime.sendMessage({ currentIndex: undefined });
                   //alert("Consulta finalizada!");
                  // window.close();
               }
@@ -146,7 +147,7 @@ window.addEventListener("message", function (event) {
                   setTimeout(() => {
                     // consultarAutomotorButtonClicked = false;
                     startAutomationButton.click();
-                  }, 4000);
+                  }, 700);
                 }
 
               }
