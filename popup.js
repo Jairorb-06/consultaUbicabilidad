@@ -70,16 +70,30 @@ window.addEventListener("message", function (event) {
                       }
                     }
                     console.log('Datos Direcciones:', datosDirecciones);
-                    if (Object.keys(informacionPersona).length > 0  && datosDirecciones.length > 0 ) {
-                      
-                      chrome.runtime.sendMessage({
-                        informacionPersona: informacionPersona,
-                        datosDirecciones: datosDirecciones,
-                        placa : placa
-                      });
-                      chrome.runtime.sendMessage({ currentIndex: currentIndex });
-                    }
-                  }, 4000)
+let mensajeEnviado = false;
+
+if (Object.keys(informacionPersona).length > 0 && datosDirecciones.length > 0 && !mensajeEnviado) {
+    mensajeEnviado = true; // Marca como mensaje enviado para evitar múltiples envíos
+
+    (async () => {
+        const response = await new Promise(resolve => {
+            chrome.runtime.sendMessage({
+                informacionPersona: informacionPersona,
+                datosDirecciones: datosDirecciones,
+                placa: placa,
+                currentIndex: currentIndex
+            }, resolve);
+        });
+        console.log("response", response);
+
+        if (response) {
+            console.log("llega response");
+            mensajeEnviado = false; // Marca como no enviado para permitir el siguiente envío
+        }
+    })();
+}
+
+                  }, 1000)
                 };
               } else {
                 console.log("consulta finalizada!");
@@ -115,8 +129,45 @@ window.addEventListener("message", function (event) {
             args: [datosPropietario, currentIndex],
           });
 
+          chrome.runtime.onMessage.addListener(function (request, sender, sendResponse, message) {
+            if (request.currentIndex !== undefined) {
+              currentIndex = request.currentIndex;
+              console.log("currentIndex inc", currentIndex);
+      
+              const startAutomationButton = document.getElementById("startAutomation");
+              if (startAutomationButton) {
+                  setTimeout(() => {
+                      startAutomationButton.click();
+                  }, 5000);
+              }
+          } if (request.informacionPersona && request.datosDirecciones && request.placa) {
+            const datosUbicabilidad = {
+              informacionPersona: request.informacionPersona,
+              datosDirecciones: request.datosDirecciones,
+              placa: request.placa,
+              currentIndex: request.currentIndex + 1, // Incrementa currentIndex antes de enviar
+            };
+            console.log("informacion", datosUbicabilidad)
+              window.frames[0].postMessage(JSON.stringify(datosUbicabilidad), "*");
+      
+              // Envía el segundo mensaje
+            //  chrome.runtime.sendMessage({ currentIndex: currentIndex + 1 });
+          } else if (message.action === "cerrarExtension") {
+              // Cerrar la ventana emergente
+              window.close();
+          }
+          if (request.informacionPersona && request.currentIndex) {
+            console.log("trae informacion", request.currentIndex);
+            setTimeout(function () {
+                sendResponse({ currentIndex: request.currentIndex + 1 });
+            },2000);
+            return true;
+        }
+        });
 
-
+         
+        
+/*
 chrome.runtime.onMessage.addListener(function (message) {  
   //setTimeout(() => {      
                const datosUbicabilidad = {
@@ -161,7 +212,7 @@ chrome.runtime.onMessage.addListener(function (message) {
                 window.close();
               }
             });
-
+            */
           }
         );
       });
