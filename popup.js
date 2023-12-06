@@ -138,7 +138,7 @@ if (Object.keys(informacionPersona).length > 0 && datosDirecciones.length > 0 &&
               if (startAutomationButton) {
                   setTimeout(() => {
                       startAutomationButton.click();
-                  }, 5000);
+                  }, 1500);
               }
           } if (request.informacionPersona && request.datosDirecciones && request.placa) {
             const datosUbicabilidad = {
