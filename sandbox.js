@@ -90,34 +90,41 @@ async function fetchData() {
     const querySnapshot = await platesCollection.get();
 
     const allDatosPropietario = [];
+    /* querySnapshot.forEach(async (doc) => {
+
+      console.log(" doc.data()", doc.data(),  doc.data().consulta)
+    })
+ */
     querySnapshot.forEach(async (doc) => {
-      const columnData = doc.data().placasUbicabilidad;
-      console.log(columnData);
-      if (Array.isArray(columnData)) {
-        for (const plate of columnData) {
-          const informacionCollection = firestore.collection("informacion");
-          const informacionQuery = await informacionCollection
-            .where("datosBasicos.Placa", "==", plate)
-            .get();
+      if(doc.data().consulta != true){
+        const columnData = doc.data().placas;
+        if (Array.isArray(columnData)) {
+          for (const plate of columnData) {
+            const informacionCollection = firestore.collection("test2");
+            const informacionQuery = await informacionCollection
+              .where("placa", "==", plate)
+              .get();
 
-          informacionQuery.forEach((informacionDoc) => {
-            // Obtener y manejar los datosPropietario si se encuentra la placa
-            const datosPropietario = informacionDoc.data().datosPropietario;
-            console.log(`Datos Propietario para la placa ${plate}:`, datosPropietario);
+            informacionQuery.forEach((informacionDoc) => {
+              // Obtener y manejar los datosPropietario si se encuentra la placa
+              const datosPropietario = informacionDoc.data().datosPropietario;
+              console.log(`Datos Propietario para la placa ${plate}:`, datosPropietario);
 
-            // Agregar la placa al objeto de datosPropietario
-            datosPropietario.forEach((datos) => {
-              datos.placa = plate;
-              allDatosPropietario.push(datos);
+              // Agregar la placa al objeto de datosPropietario
+              datosPropietario.forEach((datos) => {
+                datos.placa = plate;
+                allDatosPropietario.push(datos);
+              });
             });
-          });
-        }
+          }
 
-        // Enviar el array completo como mensaje
-        window.parent.postMessage({ allDatosPropietario }, "*");
-      } else {
-        console.log("No se encontraron datos de placas.");
+          // Enviar el array completo como mensaje
+          window.parent.postMessage({ allDatosPropietario }, "*");
+        } else {
+          console.log("No se encontraron datos de placas.");
+        }
       }
+      
     });
   } catch (error) {
     console.error("Error al consultar la colección 'plates':", error);
