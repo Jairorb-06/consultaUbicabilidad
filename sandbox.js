@@ -100,7 +100,7 @@ async function fetchData() {
         const columnData = doc.data().placas;
         if (Array.isArray(columnData)) {
           for (const plate of columnData) {
-            const informacionCollection = firestore.collection("test2");
+            const informacionCollection = firestore.collection("test4");
             const informacionQuery = await informacionCollection
               .where("placa", "==", plate)
               .get();

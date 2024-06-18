@@ -41,7 +41,7 @@ window.addEventListener("message", function (event) {
                 if (botonBuscar) {
                   botonBuscar.click();
   
-                  //setTimeout(() => {
+                  setTimeout(() => {
                     var panelBody = document.querySelector(".panel-body");
                     var informacionPersona = {};
                     var filas = panelBody.querySelectorAll(".row");
@@ -95,7 +95,7 @@ window.addEventListener("message", function (event) {
                         currentIndex: currentIndex 
                       });
                     }
-                  //}, 3000);
+                  }, 2000);
   
                   //chrome.runtime.sendMessage({ currentIndex: currentIndex });
                 }
