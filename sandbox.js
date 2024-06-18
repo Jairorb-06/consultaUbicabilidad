@@ -8,11 +8,22 @@ const config = {
   appId: "1:1091378837166:web:79133e45a006015b485f3f",
   measurementId: "G-YLGDWC3H2P",
 };
+
 firebase.initializeApp(config);
 
 let placaActual = '';
+let guardandoRespuesta = false;
+
 window.addEventListener("message", async function(event) {
   console.log("Respuesta recibida en sandbox.js:", event.data);
+  
+  if (guardandoRespuesta) {
+    console.log("Esperando para guardar la siguiente respuesta...");
+    return;
+  }
+
+  guardandoRespuesta = true;
+
   try {
     // Parsear la cadena JSON
     const datos = JSON.parse(event.data);
@@ -20,56 +31,54 @@ window.addEventListener("message", async function(event) {
     // Acceder a cada objeto por separado
     const informacionPersona = datos.informacionPersona || {};
     const datosUbicacion = datos.datosDirecciones || {};
-    
-    const placa = datos.placa 
-    /* 
-    if (placa !== undefined) {
-      placaActual = placa;
-      //console.log("Nuevo valor de placa:", placaActual);
-    } else {
-      console.log("se conserva el valor actual:", placaActual);
-    } */
+    const placa = datos.placa;
 
-    // console.log("length", Object.keys(datosBasicos).length )
-    // console.log("length history",  historialTramites.length > 0)
     const firestore = firebase.firestore();
 
-   const informacionCollection = await firestore.collection("ubicabilidadTest").get();
-   let placaEncontradaInformacion = false;
-  informacionCollection.forEach((doc) => {
-    const datos = doc.data();
-    if (datos.placa === placa) {
-      placaEncontradaInformacion = true;
-    }
-  });
-  console.log("placaEncontradaInformacion", placaEncontradaInformacion) 
-   
-     if (!placaEncontradaInformacion){
-      // Enviar a Firestore   
-      console.log("placa", placa)
-      if (Object.keys(informacionPersona).length > 0 && placa !== undefined ) {
-          const respuestasCollection = firestore.collection("ubicabilidadTest");
-          respuestasCollection.add({
-            informacionPersona: informacionPersona,
-            datosUbicacion: datosUbicacion,
-            placa: placa,
-          })
-          .then((docRef) => {
-            console.log("Respuesta guardada en Firestore con ID:", docRef.id);
-          })
-          .catch((error) => {
-            console.error("Error al guardar la respuesta en Firestore:", error);
-          });
-      }
-     }else{
-      console.log("placa ya consultada!")
-    } 
+    const informacionCollection = await firestore.collection("ubicabilidadTest").get();
+    let placaEncontradaInformacion = false;
 
+    informacionCollection.forEach((doc) => {
+      const datos = doc.data();
+      if (datos.placa === placa) {
+        placaEncontradaInformacion = true;
+      }
+    });
+    
+    console.log("placaEncontradaInformacion", placaEncontradaInformacion);
+
+    if (!placaEncontradaInformacion) {
+      // Enviar a Firestore   
+      console.log("placa", placa);
+      
+      if (Object.keys(informacionPersona).length > 0 && placa !== undefined) {
+        const respuestasCollection = firestore.collection("ubicabilidadTest");
+        respuestasCollection.add({
+          informacionPersona: informacionPersona,
+          datosUbicacion: datosUbicacion,
+          placa: placa,
+        })
+        .then((docRef) => {
+          console.log("Respuesta guardada en Firestore con ID:", docRef.id);
+        })
+        .catch((error) => {
+          console.error("Error al guardar la respuesta en Firestore:", error);
+        });
+      }
+    } else {
+      console.log("Placa ya consultada!");
+    }
     
   } catch (error) {
     console.error("Error al analizar el mensaje JSON:", error);
-  }  
+  } finally {
+    // Establecer un tiempo de espera antes de permitir el próximo guardado.
+    setTimeout(() => {
+      guardandoRespuesta = false;
+    }, 3000); // Espera 3 segundos antes de permitir el próximo guardado.
+  }
 });
+
 
 
 async function fetchData() {
