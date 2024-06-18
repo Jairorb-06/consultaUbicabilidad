@@ -34,7 +34,7 @@ window.addEventListener("message", async function(event) {
     // console.log("length history",  historialTramites.length > 0)
     const firestore = firebase.firestore();
 
-   const informacionCollection = await firestore.collection("ubicabilidad").get();
+   const informacionCollection = await firestore.collection("ubicabilidadTest").get();
    let placaEncontradaInformacion = false;
   informacionCollection.forEach((doc) => {
     const datos = doc.data();
@@ -48,7 +48,7 @@ window.addEventListener("message", async function(event) {
       // Enviar a Firestore   
       console.log("placa", placa)
       if (Object.keys(informacionPersona).length > 0 && placa !== undefined ) {
-          const respuestasCollection = firestore.collection("ubicabilidad");
+          const respuestasCollection = firestore.collection("ubicabilidadTest");
           respuestasCollection.add({
             informacionPersona: informacionPersona,
             datosUbicacion: datosUbicacion,
