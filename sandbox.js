@@ -8,8 +8,8 @@ const config = {
   appId: "1:1091378837166:web:79133e45a006015b485f3f",
   measurementId: "G-YLGDWC3H2P",
 };
-firebase.initializeApp(config);
 
+firebase.initializeApp(config);
 
 let placaActual = '';
 let guardandoRespuesta = false;
@@ -31,14 +31,13 @@ window.addEventListener("message", async function(event) {
     // Acceder a cada objeto por separado
     const informacionPersona = datos.informacionPersona || {};
     const datosUbicacion = datos.datosDirecciones || {};
-    
     const placa = datos.placa;
 
     const firestore = firebase.firestore();
 
-    const informacionCollection = await firestore.collection("ubicabilidad").get();
+    const informacionCollection = await firestore.collection("ubicabilidadTest").get();
     let placaEncontradaInformacion = false;
-    
+
     informacionCollection.forEach((doc) => {
       const datos = doc.data();
       if (datos.placa === placa) {
@@ -53,7 +52,7 @@ window.addEventListener("message", async function(event) {
       console.log("placa", placa);
       
       if (Object.keys(informacionPersona).length > 0 && placa !== undefined) {
-        const respuestasCollection = firestore.collection("ubicabilidad");
+        const respuestasCollection = firestore.collection("ubicabilidadTest");
         respuestasCollection.add({
           informacionPersona: informacionPersona,
           datosUbicacion: datosUbicacion,
@@ -79,6 +78,7 @@ window.addEventListener("message", async function(event) {
     }, 3000); // Espera 3 segundos antes de permitir el próximo guardado.
   }
 });
+
 
 
 async function fetchData() {
