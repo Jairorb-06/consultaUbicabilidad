@@ -59,24 +59,25 @@ window.addEventListener("message", function (event) {
   
                     var tablaDirecciones = document.querySelector(".tablaAjustada");
                     var datosDirecciones = [];
-  
+
                     if (tablaDirecciones) {
                       var filasDirecciones = tablaDirecciones.querySelectorAll("tbody tr");
-  
+
                       if (filasDirecciones.length > 0) {
-                        var encabezadoDirecciones = tablaDirecciones.querySelectorAll("thead th");
-                        var nombresColumnasDirecciones = Array.from(encabezadoDirecciones).map((columna) => columna.textContent.trim());
-  
+                        // Solo tomamos los encabezados que no tienen colspan
+                        var encabezadoDirecciones = Array.from(tablaDirecciones.querySelectorAll("thead th")).filter(th => !th.hasAttribute("colspan"));
+                        var nombresColumnasDirecciones = encabezadoDirecciones.map(columna => columna.textContent.trim());
+
                         filasDirecciones.forEach(function (fila) {
                           var celdasDirecciones = fila.querySelectorAll("td");
-  
+
                           if (celdasDirecciones.length > 0) {
                             var filaDatosDirecciones = {};
-  
+
                             celdasDirecciones.forEach(function (celda, index) {
                               filaDatosDirecciones[nombresColumnasDirecciones[index]] = celda.textContent.trim();
                             });
-  
+
                             datosDirecciones.push(filaDatosDirecciones);
                           }
                         });
@@ -84,7 +85,7 @@ window.addEventListener("message", function (event) {
                         console.log("No se encontraron direcciones registradas para la persona consultada.");
                       }
                     }
-  
+
                     console.log("Datos Direcciones:", datosDirecciones);
   
                     if (Object.keys(informacionPersona).length > 0 && datosDirecciones.length > 0) {
@@ -95,7 +96,7 @@ window.addEventListener("message", function (event) {
                         currentIndex: currentIndex 
                       });
                     }
-                  }, 2000);
+                  }, 3000);
   
                   //chrome.runtime.sendMessage({ currentIndex: currentIndex });
                 }
@@ -153,7 +154,7 @@ window.addEventListener("message", function (event) {
           if (startAutomationButton) {
             setTimeout(() => {
               startAutomationButton.click();
-            }, 3000);
+            }, 4000);
           }
         }
       });
